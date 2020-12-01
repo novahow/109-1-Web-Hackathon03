@@ -41,9 +41,13 @@ function Question() {
         finans = [...ans]
         console.log('bish', finans)
       }
+      setCurrentQuestion(finans.length - 1)
       const rep = await instance.post('/checkAns', {params :{finans}})
+      // let fin = rep.data.score;
+      console.log(rep.data.score)
+      setScore(rep.data.score)
       setComplete(true)
-      setContents([])
+      // setContents([])
     }
     
     // TODO : switch to the next question,
@@ -76,37 +80,60 @@ function Question() {
   })
 
   // TODO : fill in the rendering contents and logic
-  return (
-    <div id="quiz-container">
-      {contents.length ?
-        <React.Fragment>
-          <div id="question-box">
-            <div className="question-box-inner">
-              Question {current_question + 1} of 5
-            </div>
-          </div>
-
-          <div id="question-title">
-            {contents[current_question].question}
-          </div>
-
-          <div id="options">
-            {contents[current_question].options.map((e, idx) =>(
-              <div className = "each-option" onClick = {() => choose(idx)}>
-                {e}
-                {console.log(ans)}
+  if(!complete){
+    return (
+      <div id="quiz-container">
+        {contents.length ?
+          <React.Fragment>
+            <div id="question-box">
+              <div className="question-box-inner">
+                Question {current_question + 1} of 5
               </div>
-            ))}
-          </div>
-          
-          <div id="actions" onClick={next}>
-            NEXT
-          </div>
-        </React.Fragment>
-        : <React.Fragment></React.Fragment>
-      }
-    </div>
-  )
+            </div>
+
+            <div id="question-title">
+              {contents[current_question].question}
+            </div>
+
+            <div id="options">
+              {contents[current_question].options.map((e, idx) =>(
+                <div className = "each-option" onClick = {() => choose(idx)}>
+                  {e}
+                  {console.log(ans)}
+                </div>
+              ))}
+            </div>
+            
+            <div id="actions" onClick={next}>
+              NEXT
+            </div>
+          </React.Fragment>
+          : <React.Fragment></React.Fragment>
+        }
+      </div>
+    )
+  }
+  else{
+    return(
+      <div id="quiz-container">
+        {contents.length ?
+          <React.Fragment>
+            <div id="question-box">
+              <div className="question-box-inner">
+                Question {current_question + 1} of 5
+              </div>
+            </div>
+
+            <div id="question-title">
+              Your score : {score} of {ans.length}
+            </div>
+
+          </React.Fragment>
+          : <React.Fragment></React.Fragment>
+        }
+      </div>
+    )
+  }
 }
 
 export default Question
